@@ -126,7 +126,7 @@ export async function middleware(request: NextRequest) {
 
   // If route doesn't match user's role, redirect to role-specific dashboard
   if (roleRoutePattern && !roleRoutePattern.test(pathname)) {
-    const dashboardPath = `/\(routes\)/\(${decodedUser.role.toLowerCase()}\)/dashboard`;
+    const dashboardPath = `/\(${decodedUser.role.toLowerCase()}\)/dashboard`;
     return NextResponse.redirect(new URL(dashboardPath, request.url));
   }
 

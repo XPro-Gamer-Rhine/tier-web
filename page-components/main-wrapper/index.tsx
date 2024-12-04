@@ -25,9 +25,9 @@ const MainWrapper: React.FC<MainWrapperProps> = ({
   const { user, authenticated } = useAuth();
 
   useEffect(() => {
-    if (!authenticated) {
-      redirect("/login");
-    }
+    // if (!authenticated) {
+    //   redirect("/login");
+    // }
 
     if (
       allowedRoles.length > 0 &&

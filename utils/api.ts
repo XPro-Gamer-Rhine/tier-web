@@ -1,6 +1,7 @@
 import baseApi from "@/config/axios-config";
 
 export const loginUser = async (data: any) => {
+  console.log(data);
   try {
     const response = await baseApi.post("/organization/user/login", data);
     return response;

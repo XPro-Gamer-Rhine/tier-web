@@ -8,21 +8,14 @@ import {
   getOrganizationMeta,
 } from "@/utils/api";
 import useApi from "@/hooks/useApi";
-
-export enum UserRole {
-  ADMIN = "ADMIN",
-  COACH = "COACH",
-  STUDENT = "STUDENT",
-  SALES_REP = "SALES_REP",
-  AGENT = "AGENT",
-}
+import { UserRole } from "@/utils/enums";
 
 const ROLE_ROUTES: Record<any, string> = {
   [UserRole.ADMIN]: "/dashboard",
-  [UserRole.COACH]: "/coach",
-  [UserRole.STUDENT]: "/student",
-  [UserRole.SALES_REP]: "/sales_rep",
-  [UserRole.AGENT]: "/agent",
+  [UserRole.COACH]: "/coach/dashboard",
+  [UserRole.STUDENT]: "/student/dashboard",
+  [UserRole.SALES_REP]: "/sales_rep/dashboard",
+  [UserRole.AGENT]: "/agent/dashboard",
 };
 
 interface User {
@@ -107,43 +100,8 @@ export const AuthContextProvider = ({
     return currentPath.startsWith(roleRoutePrefix);
   };
 
-  // const initializeOrganization = async () => {
-  //   try {
-  //     const storedOrganizationString = localStorage.getItem("organization");
-  //     if (storedOrganizationString) {
-  //       const storedOrganization = JSON.parse(
-  //         storedOrganizationString
-  //       ) as Organization;
-
-  //       setOrganization(storedOrganization);
-  //       return storedOrganization;
-  //     }
-
-  //     const orgName = path.split("/")[1];
-  //     const orgDetails = await getOrganizationDetails(orgName);
-
-  //     if (orgDetails.data) {
-  //       const fetchedOrganization = orgDetails.data;
-
-  //       setOrganization(fetchedOrganization);
-  //       localStorage.setItem(
-  //         "organization",
-  //         JSON.stringify(fetchedOrganization)
-  //       );
-  //       return fetchedOrganization;
-  //     }
-
-  //     return null;
-  //   } catch (error) {
-  //     console.error("Organization initialization error:", error);
-  //     return null;
-  //   }
-  // };
-
   const initializeUser = async () => {
     try {
-      // await initializeOrganization();
-
       const storedUserString = localStorage.getItem("user");
       const token = localStorage.getItem("token");
       const organizationMeta = JSON.parse(
@@ -178,7 +136,7 @@ export const AuthContextProvider = ({
 
           if (!isRouteAllowed(path)) {
             const roleRoutePrefix = ROLE_ROUTES[userData.role];
-            router.push(`/dashboard`);
+            router.push(`${roleRoutePrefix}`);
           }
         } else if (!path.includes("forget-password")) {
           await redirectToLogin();
@@ -277,13 +235,13 @@ export const AuthContextProvider = ({
   };
 
   const logout = () => {
+    const currentOrganization = JSON.parse(
+      localStorage.getItem("organization") || "{}"
+    );
     setUser(null);
     setOrganization(null);
     setIsAuthenticated(false);
     setNotificationCount(0);
-    const currentOrganization = JSON.parse(
-      localStorage.getItem("organization") || "{}"
-    );
     localStorage.clear();
     localStorage.setItem("organization", JSON.stringify(currentOrganization));
     router.push(`/${currentOrganization.organizationName}/login`);
