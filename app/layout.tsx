@@ -1,17 +1,9 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Lexend } from "next/font/google";
 import "./globals.css";
+import { Container } from "@mui/material";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+const lexend = Lexend({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -25,8 +17,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+      <body className={lexend.className}>
+        <Container
+          disableGutters
+          maxWidth={false}
+          style={{
+            backgroundColor: "white",
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          {children}
+        </Container>
       </body>
     </html>
   );
