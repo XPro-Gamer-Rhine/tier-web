@@ -19,12 +19,6 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useSidebarItems } from "./sidebar-item";
 import Link from "next/link";
-import { useAuth } from "@/lib/contexts/AuthContext";
-import {
-  getOrganizationDetails,
-  getOrganizationMeta,
-  userDetails,
-} from "@/utils/api";
 
 const SidebarItem = ({
   title,
@@ -72,7 +66,9 @@ export const Sidebar = () => {
   const [activePath, setActivePath] = useState(path);
   const { sidebarTopItems, sidebarBottomItems } = useSidebarItems();
   const router = useRouter();
-  const { organization } = useAuth();
+  const organization = JSON.parse(
+    localStorage.getItem("organizationMeta") || "{}"
+  );
 
   const accessibleMenus = organization?.role?.widgtes ?? [];
 

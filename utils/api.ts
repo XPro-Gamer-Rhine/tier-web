@@ -60,9 +60,7 @@ export const getUsersList = async (organizationId: any, role: any) => {
     );
     return response;
   }
-  const response = await baseApi.get(
-    `/api/v1/organization/users/${organizationId}`
-  );
+  const response = await baseApi.get(`/organization/users/${organizationId}`);
   return response;
 };
 
@@ -98,12 +96,34 @@ export const revokeInvitation = async (data: any) => {
 };
 
 export const resendInvitation = async (data: any) => {
-  const response = await baseApi.post(
-    `/api/v1/organization/invitation/resend`,
-    data
-  );
+  const response = await baseApi.post(`/organization/invitation/resend`, data);
 
   return response;
 };
 
+export const postConvoTeam = async (data: any) => {
+  const response = await baseApi.post("/convoTeam", data);
+  return response;
+};
 
+export const updateConvoTeam = async ({ data, teamId }: any) => {
+  const response = await baseApi.put(`/convoTeam/${teamId}`, data);
+  return response;
+};
+
+export const getAllPersonas = async () => {
+  const response = await baseApi.get(`/convoPersona`);
+
+  return response;
+};
+
+export const getConvoTeam = async (organizationId: string, userType: any) => {
+  const query = userType ? `?type=${userType}&` : "";
+  const response = await baseApi.get(`/convoTeam/${organizationId}${query}`);
+  return response;
+};
+
+export const deleteConvoTeam = async ({ teamId }: any) => {
+  const response = await baseApi.delete(`/convoTeam/${teamId}`);
+  return response;
+};

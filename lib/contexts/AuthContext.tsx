@@ -17,7 +17,7 @@ export enum UserRole {
   AGENT = "AGENT",
 }
 
-const ROLE_ROUTES: Record<UserRole, string> = {
+const ROLE_ROUTES: Record<any, string> = {
   [UserRole.ADMIN]: "/dashboard",
   [UserRole.COACH]: "/coach",
   [UserRole.STUDENT]: "/student",
@@ -146,18 +146,26 @@ export const AuthContextProvider = ({
 
       const storedUserString = localStorage.getItem("user");
       const token = localStorage.getItem("token");
+      const organizationMeta = JSON.parse(
+        localStorage.getItem("organizationMeta") || "{}"
+      );
 
-      if (storedUserString && token) {
+      if (storedUserString && token && organizationMeta) {
         const storedUser = JSON.parse(storedUserString) as User;
         setUser(storedUser);
         setIsAuthenticated(true);
+        setOrganization(organizationMeta);
       } else {
         const response = await getUserDetails();
-        setOrganization(response.results[1]);
+        localStorage.setItem(
+          "organizationMeta",
+          JSON.stringify(response.results[1])
+        );
         if (response?.results[0]?.user) {
           const organization = JSON.parse(
-            localStorage.getItem("organization") || "{}"
+            localStorage.getItem("organizationMeta") || "{}"
           );
+          setOrganization(organization);
           const userData = {
             ...response.results[0].user,
             organization_id: response.results[0].organization_id,
@@ -198,7 +206,6 @@ export const AuthContextProvider = ({
     try {
       const orgDetails = await getOrganizationDetails(path.split("/")[1]);
       localStorage.setItem("organization", JSON.stringify(orgDetails.data));
-      // setOrganization(orgDetails.data);
       router.push(`/${orgDetails.data.organizationName}/login`);
     } catch {
       const storedOrganization = JSON.parse(
@@ -239,7 +246,11 @@ export const AuthContextProvider = ({
       if (response.data.success && response.data.token) {
         localStorage.setItem("token", response.data.token);
         const userData = await getUserDetails();
-        setOrganization(userData.results[1]);
+
+        localStorage.setItem(
+          "organizationMeta",
+          JSON.stringify(userData.results[1])
+        );
         const user = {
           ...userData.results[0].user,
           organization_id: userData.results[0].organization_id,

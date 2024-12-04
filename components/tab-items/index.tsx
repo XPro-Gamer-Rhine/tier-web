@@ -3,13 +3,14 @@ import {
   PeopleAlt,
   SupportAgent,
 } from "@mui/icons-material";
+import TeamList from "./teams/team-list";
 
 export const TabItems = [
   {
     label: "Teams",
     value: "teams",
     icon: <PeopleAlt />,
-    content: null,
+    content: <TeamList />,
   },
   {
     label: "Sales Representatives",
