@@ -3,6 +3,8 @@
 import { Box, Button, Container, Typography } from "@mui/material";
 import Link from "next/link";
 import { keyframes } from "@mui/system";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const pulse = keyframes`
   0% {
@@ -20,6 +22,16 @@ const pulse = keyframes`
 `;
 
 export default function NotFound() {
+  const router = useRouter();
+  useEffect(() => {
+    const currentOrganization = JSON.parse(
+      localStorage.getItem("organization") || "{}"
+    );
+    localStorage.clear();
+    router.push(`/${currentOrganization.organizationName}/login`);
+  }, []);
+
+  
   return (
     <Container
       sx={{
